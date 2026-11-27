@@ -152,6 +152,11 @@ function startSlideshow(show, track, slides, prevBtn, nextBtn) {
   const loopClone = slides[0].cloneNode(true);
   loopClone.setAttribute('aria-hidden', 'true');
   loopClone.inert = true;
+  // Copies don't keep event listeners, so give the copied image its own
+  // "missing file" fallback (otherwise a broken image shows up there)
+  loopClone.querySelectorAll('img').forEach((img) =>
+    img.addEventListener('error', () => img.replaceWith(el('div', { className: 'placeholder project-media' }, 'Slide 1')), { once: true })
+  );
   track.append(loopClone);
 
   let index = 0;

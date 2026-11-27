@@ -93,6 +93,7 @@ p  { font-size: $size-p;  font-weight: $weight-p; color: $color-text-muted; } //
     inset: -0.1em 0;
     z-index: 0;
     overflow: hidden;
+    pointer-events: none; // touches go straight to the page, so scrolling starts normally
     background: $color-primary; // letter color behind the particles
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;

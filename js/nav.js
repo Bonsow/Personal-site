@@ -131,8 +131,13 @@ navHome?.addEventListener(
 );
 
 document.fonts.ready.then(measureNav);
+// Width changes only (phone toolbars fire "resize" while scrolling)
 let navResizeFrame;
+let navLastWidth = document.documentElement.clientWidth;
 window.addEventListener('resize', () => {
+  const width = document.documentElement.clientWidth;
+  if (width === navLastWidth) return;
+  navLastWidth = width;
   cancelAnimationFrame(navResizeFrame);
   navResizeFrame = requestAnimationFrame(measureNav);
 });

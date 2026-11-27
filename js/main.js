@@ -49,6 +49,10 @@ const PARTICLE_DENSITY = 300;   // particles per 1920×1080 area of canvas
 const PARALLAX_SPEED = 0.5;     // particles scroll at 50% of page speed
 // ---------------------------------------------------------------
 
+// Phones/tablets have no hover, so the cursor push is off there. That also
+// keeps the particles from listening to touches while you scroll.
+const CAN_HOVER = window.matchMedia('(hover: hover)').matches;
+
 async function initNameParticles() {
   if (!window.tsParticles) return;
 
@@ -69,8 +73,10 @@ async function initNameParticles() {
         move: { enable: true, speed: 1.2, outModes: { default: 'bounce' } },
       },
       interactivity: {
-        detectsOn: 'window', // the text sits on top, so listen on the whole window
-        events: { onHover: { enable: true, mode: 'repulse' } },
+        // Mouse: listen on the whole window (the text sits on top of the canvas).
+        // Touch: only the canvas, which ignores touches (pointer-events: none).
+        detectsOn: CAN_HOVER ? 'window' : 'canvas',
+        events: { onHover: { enable: CAN_HOVER, mode: 'repulse' } },
         modes: { repulse: { distance: 100 } },
       },
     },
@@ -134,8 +140,15 @@ document.fonts.ready.then(() => {
   initNameParticles();
 });
 
+// Only refit when the width changes. Phone browsers fire "resize" whenever
+// their toolbar slides in/out during a scroll, and re-measuring the name in
+// the middle of a touch scroll made Safari jump back to the top.
 let resizeFrame;
+let lastWidth = document.documentElement.clientWidth;
 window.addEventListener('resize', () => {
+  const width = document.documentElement.clientWidth;
+  if (width === lastWidth) return;
+  lastWidth = width;
   cancelAnimationFrame(resizeFrame);
   resizeFrame = requestAnimationFrame(() => {
     fitName();

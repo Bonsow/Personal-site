@@ -391,13 +391,18 @@
 .slideshow {
   position: relative;
 
+  // The viewport sets the size (16:9), and every slide fills it. Slides used
+  // to size themselves, so on phones one odd slide (an image still loading
+  // or a broken one) could stretch the whole slideshow taller mid-scroll.
   &__viewport {
     overflow: hidden;
+    aspect-ratio: 16 / 9;
     border-radius: $radius-sm;
   }
 
   &__track {
     display: flex;
+    height: 100%;
     transition: transform var(--slide-duration, 900ms) var(--slide-ease, ease-out);
     will-change: transform;
 
@@ -409,8 +414,11 @@
   &__slide {
     flex: 0 0 100%;
     min-width: 0;
+    height: 100%;
 
     .project-media {
+      height: 100%;
+      aspect-ratio: auto;
       border-radius: 0;
     }
   }

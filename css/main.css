@@ -824,10 +824,12 @@ video.level__preview.is-paused {
 }
 .slideshow__viewport {
   overflow: hidden;
+  aspect-ratio: 16/9;
   border-radius: 10px;
 }
 .slideshow__track {
   display: flex;
+  height: 100%;
   transition: transform var(--slide-duration, 900ms) var(--slide-ease, ease-out);
   will-change: transform;
 }
@@ -837,8 +839,11 @@ video.level__preview.is-paused {
 .slideshow__slide {
   flex: 0 0 100%;
   min-width: 0;
+  height: 100%;
 }
 .slideshow__slide .project-media {
+  height: 100%;
+  aspect-ratio: auto;
   border-radius: 0;
 }
 .slideshow__btn {
@@ -1006,6 +1011,7 @@ p {
   inset: -0.1em 0;
   z-index: 0;
   overflow: hidden;
+  pointer-events: none;
   background: #0077ff;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;

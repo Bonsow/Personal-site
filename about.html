@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — Spencer Anderson</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Lenis -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.28/dist/lenis.css" />
+
+    <!-- Compiled by Live Sass Compiler from scss/main.scss -->
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <a href="index.html" class="nav__pill nav__home">
+        <span class="nav__label nav__label--full">Home</span>
+        <span class="nav__label nav__label--compact" aria-hidden="true">Spencer Anderson</span>
+      </a>
+
+      <nav class="nav__pill nav__links" aria-label="Main">
+        <a href="projects.html" class="nav__link">Projects</a>
+        <a href="about.html" class="nav__link is-active" aria-current="page">About</a>
+        <a href="#resources" class="nav__link">Resources</a>
+      </nav>
+    </header>
+
+    <main class="page">
+      <!-- Hero image -->
+      <div class="placeholder about-hero">Hero Image</div>
+
+      <!-- Where I've been -->
+      <section class="about-section">
+        <h1>Where I’ve been</h1>
+        <ul class="jobs">
+          <li class="job">
+            <div class="job__logo placeholder" aria-hidden="true"></div>
+            <div>
+              <h2 class="job__company">Company Name</h2>
+              <p class="job__role">Role</p>
+              <p class="label job__dates">2026 - Present</p>
+            </div>
+          </li>
+          <li class="job">
+            <div class="job__logo placeholder" aria-hidden="true"></div>
+            <div>
+              <h2 class="job__company">Company Name</h2>
+              <p class="job__role">Role</p>
+              <p class="label job__dates">2025 - 2026</p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Beyond design -->
+      <section class="about-section">
+        <h1>Beyond design</h1>
+        <p>
+          Somehow, even in my hobbies, design thinking and principles still haunt me and it is
+          very apparent when you see what digital creations I’ve made in my free time…
+        </p>
+      </section>
+
+      <!-- What I make for fun -->
+      <section class="card-section">
+        <h1>What I make for fun</h1>
+
+        <!-- Geometry Dash -->
+        <article class="card fun-card">
+          <div class="fun-card__header">
+            <img class="fun-card__icon" src="media/About_me_media/GDIcon.png" alt="" />
+            <div class="fun-card__summary">
+              <h3>Creator in Geometry Dash</h3>
+              <ul class="bullets label fun-card__bullets">
+                <li>620k+ downloads for 3 extremely difficult levels</li>
+                <li>250k+ views on YouTube</li>
+                <li>An average enjoyment of 8/10</li>
+              </ul>
+            </div>
+            <button
+              class="fun-card__toggle"
+              aria-expanded="false"
+              aria-controls="gd-details"
+              aria-label="Show my Geometry Dash levels"
+            ></button>
+          </div>
+
+          <div class="fun-card__details" id="gd-details" inert>
+            <div class="fun-card__details-inner">
+              <!-- Filled in from js/data/gd-levels.js -->
+              <ul class="levels" id="gd-levels"></ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Minecraft -->
+        <article class="card fun-card">
+          <div class="fun-card__header">
+            <img class="fun-card__icon fun-card__icon--pixel" src="media/About_me_media/MCSkin.png" alt="" />
+            <div class="fun-card__summary">
+              <h3>Minecraft to relax</h3>
+              <ul class="bullets label fun-card__bullets">
+                <li>Outlet for creative problem solving</li>
+                <li>Builds focused on the player with framing and pathing</li>
+                <li>My preferred way to end a busy day</li>
+              </ul>
+            </div>
+            <button
+              class="fun-card__toggle"
+              aria-expanded="false"
+              aria-controls="mc-details"
+              aria-label="Show my Minecraft builds"
+            ></button>
+          </div>
+
+          <div class="fun-card__details" id="mc-details" inert>
+            <div class="fun-card__details-inner">
+              <div class="build">
+                <h2>My survival world</h2>
+                <p>
+                  This is where I can challenge myself to make form match function and experiment
+                  with colors, textures, and all around vibe.
+                </p>
+                <!-- Before / after slider: built by js/about.js from these data attributes -->
+                <div
+                  class="build__media"
+                  data-before-after
+                  data-before="media/About_me_media/MC_Survival_before.webp"
+                  data-before-alt="My survival world before"
+                  data-after="media/About_me_media/MC_Survival_after.webp"
+                  data-after-alt="My survival world after"
+                ></div>
+              </div>
+              <div class="build">
+                <h2>The art of technical Minecraft</h2>
+                <p>
+                  Survival Minecraft is only half building, remember you still need items to build
+                  with so why not automate and organize the bare bone components they give you?
+                </p>
+                <!-- Slideshow: built by js/about.js. List images separated by commas,
+                     with alt text in the same order (separated by |) -->
+                <div
+                  class="build__media"
+                  data-slideshow
+                  data-images="media/About_me_media/MC_slide_1.webp, media/About_me_media/MC_slide_2.webp, media/About_me_media/MC_slide_3.webp, media/About_me_media/MC_slide_4.webp"
+                  data-alts="Technical Minecraft build 1 | Technical Minecraft build 2 | Technical Minecraft build 3 | Technical Minecraft build 4"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- My favorite media -->
+      <section class="card-section">
+        <h1>My favorite media</h1>
+        <iframe
+          class="spotify-embed"
+          style="display: block; border-radius: 12px"
+          title="My top 25 songs on Spotify"
+          src="https://open.spotify.com/embed/playlist/3Q0vZrFVUGPyq6BJvtz6Ye?utm_source=generator&amp;theme=0"
+          width="100%"
+          height="352"
+          frameborder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </section>
+    </main>
+
+    <footer class="footer" id="resources">
+      <div class="footer__inner">
+        <div class="footer__col">
+          <h2 class="footer__heading">Spencer Anderson</h2>
+          <p class="footer__text">UX Designer</p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__heading">Socials</h2>
+          <ul class="footer__socials">
+            <li>
+              <a href="#" aria-label="X">
+                <span class="footer__icon footer__icon--x" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="LinkedIn">
+                <span class="footer__icon footer__icon--linkedin" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="Instagram">
+                <span class="footer__icon footer__icon--instagram" aria-hidden="true"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__heading">Resources</h2>
+          <ul class="footer__links">
+            <li><a href="#">Resume</a></li>
+            <li><a href="mailto:you@example.com">Copy Email</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/lenis@1.3.28/dist/lenis.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/data/gd-levels.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/project-data.js"></script>
+    <script src="js/project-render.js"></script>
+    <script src="js/about.js"></script>
+  </body>
+</html>

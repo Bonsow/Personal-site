@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects — Spencer Anderson</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Lenis -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.28/dist/lenis.css" />
+
+    <!-- Compiled by Live Sass Compiler from scss/main.scss -->
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <a href="index.html" class="nav__pill nav__home">
+        <span class="nav__label nav__label--full">Home</span>
+        <span class="nav__label nav__label--compact" aria-hidden="true">Spencer Anderson</span>
+        <span class="nav__label nav__label--close" aria-hidden="true"></span>
+      </a>
+
+      <nav class="nav__pill nav__links" aria-label="Main">
+        <a href="projects.html" class="nav__link is-active" aria-current="page">Projects</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="#resources" class="nav__link">Resources</a>
+      </nav>
+    </header>
+
+    <main class="page page--reading">
+      <h1 class="visually-hidden">Projects</h1>
+
+      <!-- Filled in from js/data/projects/ by js/projects.js -->
+      <ul class="project-list" id="project-list" aria-live="polite"></ul>
+    </main>
+
+    <!-- Case study overlay (js/case-study.js) -->
+    <div class="case-study" id="case-study" role="dialog" aria-modal="true" aria-labelledby="case-study-title" hidden>
+      <div class="case-study__bg"></div>
+      <div class="case-study__scroll">
+        <article class="page page--reading project case-study__content">
+          <header class="project__header">
+            <h1 class="project__title" id="case-study-title" tabindex="-1"></h1>
+            <p class="label project__date" id="case-study-date"></p>
+          </header>
+          <div class="project__sections" id="case-study-sections"></div>
+        </article>
+      </div>
+    </div>
+
+    <footer class="footer" id="resources">
+      <div class="footer__inner">
+        <div class="footer__col">
+          <h2 class="footer__heading">Spencer Anderson</h2>
+          <p class="footer__text">UX Designer</p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__heading">Socials</h2>
+          <ul class="footer__socials">
+            <li>
+              <a href="#" aria-label="X">
+                <span class="footer__icon footer__icon--x" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="LinkedIn">
+                <span class="footer__icon footer__icon--linkedin" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="Instagram">
+                <span class="footer__icon footer__icon--instagram" aria-hidden="true"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__heading">Resources</h2>
+          <ul class="footer__links">
+            <li><a href="#">Resume</a></li>
+            <li><a href="mailto:you@example.com">Copy Email</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/lenis@1.3.28/dist/lenis.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/project-data.js"></script>
+    <script src="js/project-render.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/case-study.js"></script>
+  </body>
+</html>

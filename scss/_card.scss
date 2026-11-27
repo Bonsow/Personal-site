@@ -1,0 +1,158 @@
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:math';
+@use 'variables' as *;
+
+// ===============================================================
+// Card style — used by .card and the nav pills
+//   • fill:    $color-primary at $card-fill-opacity (5%)
+//   • outline: 1px $card-outline, blended with overlay
+//   • edge blur: stacked backdrop blurs, strongest at the edges
+//     (layers are added by js/effects.js — see "Effects notes")
+// ===============================================================
+
+// ---------------------------------------------------------------
+// Overlay blend maths, done in Sass. Used where the browser can't blend
+// with the page (inside the fixed nav, browsers only blend within the nav).
+// ---------------------------------------------------------------
+@function _overlay-channel($base, $blend) {
+  $b: math.div($base, 255);
+  $s: math.div($blend, 255);
+  @if $b < 0.5 {
+    @return math.round(2 * $b * $s * 255);
+  }
+  @return math.round((1 - 2 * (1 - $b) * (1 - $s)) * 255);
+}
+
+@function overlay($base, $blend) {
+  @return rgb(
+    _overlay-channel(color.red($base), color.red($blend)),
+    _overlay-channel(color.green($base), color.green($blend)),
+    _overlay-channel(color.blue($base), color.blue($blend))
+  );
+}
+
+// What the card fill looks like on the page background
+$card-fill-on-bg: color.mix($color-primary, $color-background, $card-fill-opacity * 100%);
+
+// Blur the outline "sees" (also the outermost edge-blur band below)
+$card-outline-blur: 25px;
+
+// $live-blend: true  = real mix-blend-mode: overlay (cards in the page)
+//              false = for fixed elements (nav pills, × button), where blend
+//                      modes can't see the page. Instead the outline is a 1px
+//                      ring with backdrop-filter: blur + brightness(2).
+//                      Overlaying white onto a colour = doubling its
+//                      brightness (capped at white), so it looks the same.
+@mixin card-surface($live-blend: true) {
+  // No isolation / z-index here on purpose: the outline's overlay blend
+  // needs to see the page behind the card, not just the card itself.
+  position: relative;
+  background: rgba($color-primary, $card-fill-opacity);
+
+  // Content sits above the blur layers (which come first in the card)
+  > :not(.edge-blur) {
+    position: relative;
+  }
+
+  // Outline.
+  // Cards: drawn on top of the blur layers (::after), so its overlay blend
+  //   picks up the *blurred* page behind the card — it glows softly where
+  //   something bright passes underneath (matches the Figma effect).
+  // Fixed elements: drawn *underneath* the content (::before), so its blur
+  //   only sees what's behind the nav, never the nav's own text. The blur
+  //   layers are inset by the outline width so they don't cover it.
+  $outline: 'after';
+
+  @if not $live-blend {
+    $outline: 'before';
+
+    > .edge-blur {
+      inset: $card-outline-width;
+    }
+  }
+
+  &::#{$outline} {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+
+    @if $live-blend {
+      border: $card-outline-width solid $card-outline;
+      mix-blend-mode: overlay;
+    } @else {
+      // Fallback for browsers without backdrop-filter: pre-calculated colour
+      border: $card-outline-width solid overlay($card-fill-on-bg, $card-outline);
+
+      @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+        border: 0;
+        padding: $card-outline-width;
+        -webkit-backdrop-filter: blur($card-outline-blur) brightness(2);
+        backdrop-filter: blur($card-outline-blur) brightness(2);
+        // Keep only the 1px ring: full box minus the inner content box
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+      }
+    }
+  }
+}
+
+.card {
+  @include card-surface;
+  padding: 20px;
+  border-radius: $radius;
+}
+
+// ---------------------------------------------------------------
+// Edge blur: blur is strongest at the edges and tapers inward.
+// [blur amount, edge band depth] — the first layer covers everything.
+// ---------------------------------------------------------------
+$edge-blur-layers: (5px null) (8px 24px) (11px 12px) ($card-outline-blur 5px); // outermost band = $card-outline-blur (was 15px)
+
+@mixin edge-mask($depth) {
+  $h: linear-gradient(to right, #000, transparent $depth, transparent calc(100% - #{$depth}), #000);
+  $v: linear-gradient(to bottom, #000, transparent $depth, transparent calc(100% - #{$depth}), #000);
+  -webkit-mask-image: $h, $v;
+  mask-image: $h, $v;
+  -webkit-mask-composite: source-over;
+  mask-composite: add;
+}
+
+.edge-blur {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+
+  > div {
+    position: absolute;
+    inset: -4px; // blur samples a little past the edge so it doesn't fade out there
+  }
+
+  // The blur layers cover the card's own fill, so re-apply the 5% tint on top of them
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba($color-primary, $card-fill-opacity);
+  }
+
+  @each $layer in $edge-blur-layers {
+    $i: list.index($edge-blur-layers, $layer);
+    $blur: list.nth($layer, 1);
+    $depth: list.nth($layer, 2);
+
+    > div:nth-child(#{$i}) {
+      -webkit-backdrop-filter: blur($blur);
+      backdrop-filter: blur($blur);
+
+      @if $depth {
+        @include edge-mask($depth);
+      }
+    }
+  }
+}

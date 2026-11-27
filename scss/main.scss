@@ -1,0 +1,232 @@
+@use 'variables' as *;
+@use 'card';
+@use 'nav';
+@use 'about';
+@use 'projects';
+
+// Reset
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// Share the color variables with JavaScript (js/main.js reads these)
+:root {
+  --color-primary: #{$color-primary};
+  --color-background: #{$color-background};
+}
+
+// Hide the page scrollbar (scrolling still works normally)
+html {
+  scrollbar-width: none; // Firefox, and newer Chrome/Edge
+
+  &::-webkit-scrollbar {
+    display: none; // Safari, older Chrome/Edge
+  }
+}
+
+body {
+  font-family: $font;
+  color: $color-text;
+  background: $color-background;
+}
+
+// Type scale (sizes live in _variables.scss)
+h1 { font-size: $size-h1; font-weight: $weight-h1; }
+h2 { font-size: $size-h2; font-weight: $weight-h2; }
+h3 { font-size: $size-h3; font-weight: $weight-h3; }
+p  { font-size: $size-p;  font-weight: $weight-p; color: $color-text-muted; } // all paragraphs: #c9e2ff
+.label { font-size: $size-label; font-weight: $weight-label; color: $color-primary; } // use class="label" on any element; all labels: #0077ff
+
+// Lists are body text colour (#c9e2ff), even when they use the label size.
+// Comes after .label so it wins on lists like <ul class="bullets label">.
+.bullets,
+.numbers {
+  color: $color-text-muted;
+}
+
+// Hidden visually but still read by screen readers
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Hero
+.hero {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding-inline: $space-md;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    --name-size: #{$size-name-mobile};
+
+    @media (min-width: $bp-desktop) {
+      --name-size: #{$size-name-desktop};
+    }
+  }
+
+  // The name works as a "window": the particle layer is cut to the shape of the
+  // letters with a mask that js/main.js draws from the real text. Works on any
+  // background color. Until the mask is ready the name shows as plain text.
+  &__name {
+    position: relative;
+    font-size: var(--name-size);
+    font-weight: 900;
+    line-height: 0.85;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  // Window behind the letters (same size as the text layer below)
+  &__particles {
+    position: absolute;
+    inset: -0.1em 0;
+    z-index: 0;
+    overflow: hidden;
+    background: $color-primary; // letter color behind the particles
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+
+  // Hide the particle box until its letter mask exists
+  &__name:not(.is-masked) &__particles {
+    visibility: hidden;
+  }
+
+  // The particle canvas is taller than the window (extra room above) so it can
+  // be shifted by the parallax in js/main.js without leaving a gap.
+  &__particles-canvas {
+    position: absolute;
+    top: -$parallax-room;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    will-change: transform;
+  }
+
+  &__name-text {
+    position: relative;
+    z-index: 1;
+    display: block;
+    // Extra room so tall letters aren't cut off; the negative margin keeps the layout the same
+    padding-block: 0.1em;
+    margin-block: -0.1em;
+    color: $color-primary; // fallback before the mask is ready
+    pointer-events: none;
+
+    span {
+      display: block;
+    }
+  }
+
+  // Once masked, the real text is invisible (still there for screen readers and layout)
+  &__name.is-masked &__name-text {
+    color: transparent;
+  }
+
+  // Scales with the name so the proportions stay the same at any size
+  &__tagline {
+    align-self: flex-end;
+    color: $color-primary;
+    margin-top: calc(var(--name-size) * 0.1);
+    font-size: calc(var(--name-size) * 0.22);
+    font-weight: 300;
+  }
+}
+
+// Footer
+.footer {
+  margin-top: $footer-padding; // space above the blue band
+  padding-block: $footer-padding;
+  padding-inline: $space-md;
+  background: $color-primary;
+  color: $color-text;
+
+  // Figma: horizontal auto layout, "Auto" (space-between) gaps, $footer-width wide
+  &__inner {
+    width: 100%;
+    max-width: $footer-width;
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: $footer-stack-below) {
+      flex-direction: column;
+      gap: $space-md;
+    }
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  &__heading {
+    font-size: $size-footer-heading;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  &__text,
+  &__links {
+    font-size: $size-footer-text;
+    font-weight: 300;
+    line-height: 1.25;
+    color: $color-text-muted;
+  }
+
+  &__socials {
+    display: flex;
+    align-items: center;
+    gap: $footer-icon-gap;
+    font-size: $size-footer-icon;
+
+    a {
+      display: block;
+    }
+  }
+
+  // Icons: the SVG files are used as a mask, so they take the text color
+  // instead of the color baked into the files.
+  &__icon {
+    display: block;
+    height: 1em;
+    aspect-ratio: 1;
+    background-color: currentColor;
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    mask: var(--icon) center / contain no-repeat;
+
+    &--x {
+      --icon: url('../media/icons/x.svg');
+      aspect-ratio: 18 / 16;
+    }
+
+    &--linkedin {
+      --icon: url('../media/icons/linkedin.svg');
+    }
+
+    &--instagram {
+      --icon: url('../media/icons/instagram.svg');
+    }
+  }
+}

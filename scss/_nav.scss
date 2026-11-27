@@ -1,0 +1,234 @@
+@use 'variables' as *;
+@use 'card';
+
+// Nav — Figma "Header": horizontal auto layout, space-between.
+// Up to $nav-width wide and centered; on narrower screens it keeps
+// $space-md of room on each side.
+.nav {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 10;
+  width: min(#{$nav-width}, calc(100% - #{$space-md} * 2));
+
+  @media (max-width: $bp-mobile) {
+    width: calc(100% - #{$mobile-gutter} * 2); // 20px gutters on phones
+  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: $nav-padding-y;
+  pointer-events: none; // only the pills are clickable, not the empty space
+
+  // Shared pill — same glass style as the cards
+  &__pill {
+    @include card.card-surface($live-blend: false); // fixed nav can't blend with the page
+    display: flex;
+    align-items: center;
+    height: $nav-pill-height;
+    padding-inline: $nav-pill-padding-x;
+    border-radius: 999px;
+    color: $color-text;
+    font-size: $size-nav;
+    text-decoration: none;
+    pointer-events: auto;
+
+    // Shrink on phones so both pills fit
+    @media (max-width: 600px) {
+      height: $nav-pill-height * 0.7;
+      padding-inline: $nav-pill-padding-x * 0.4;
+      font-size: $size-nav * 0.6;
+    }
+  }
+
+  &__home {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  &__links {
+    gap: $nav-link-gap;
+
+    @media (max-width: 600px) {
+      gap: $nav-link-gap * 0.4;
+    }
+  }
+
+  &__link {
+    color: inherit;
+    font-weight: 300;
+    text-decoration: none;
+    text-underline-offset: 0.15em;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    // Current page: bold + underlined
+    &.is-active {
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  }
+}
+
+// ---------------------------------------------------------------
+// Compact nav: after scrolling down, the HOME pill morphs into a small
+// centered "Spencer Anderson" pill, and the links pill slides to the
+// center behind it and shrinks away. js/nav.js toggles .is-compact and
+// measures the sizes (--home-full-w, --home-compact-w, --links-shift).
+// ---------------------------------------------------------------
+$morph: $nav-morph-duration $ease-elastic;
+$fade: calc(#{$nav-morph-duration} * 0.4) ease;
+
+.nav {
+  --compact-pad-x: #{$nav-compact-padding-x}; // read by js/nav.js
+  --close-w: #{$project-close-width};          // read by js/nav.js
+
+  // HOME is positioned on its own so it can travel to the center
+  &__home {
+    position: absolute;
+    top: $nav-padding-y;
+    left: 0;
+    z-index: 2;
+    justify-content: center;
+    width: var(--home-full-w, auto);
+    transition:
+      left $morph,
+      translate $morph,
+      width $morph,
+      height $morph;
+  }
+
+  // Links pill stays on the right
+  &__links {
+    margin-left: auto;
+    z-index: 1;
+    transition:
+      translate $morph,
+      scale $morph,
+      opacity $fade;
+  }
+
+  // The two labels inside HOME crossfade
+  & &__home &__label {
+    white-space: nowrap;
+    transition:
+      scale $morph,
+      opacity $fade;
+  }
+
+  // "Spencer Anderson": 12px, hidden until compact
+  & &__home &__label--compact {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    font-size: $nav-compact-size;
+    line-height: 1.2;
+    opacity: 0;
+    scale: 1.6;
+  }
+
+  // Once js/nav.js has measured everything, HOME's width is set explicitly
+  &.is-measured &__home &__label--full {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+  }
+
+  // ---- Compact state ----
+  &.is-compact {
+    .nav__home {
+      left: 50%;
+      translate: -50% 0;
+      width: var(--home-compact-w, auto);
+      height: calc(#{$nav-compact-size} * 1.2 + #{$nav-compact-padding-y} * 2);
+    }
+
+    .nav__home .nav__label--full {
+      opacity: 0;
+      scale: 0.5;
+    }
+
+    .nav__home .nav__label--compact {
+      opacity: 1;
+      scale: 1;
+    }
+
+    .nav__links {
+      translate: var(--links-shift, 0) 0;
+      scale: 0.5;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  // ---- Case study mode (projects.html overlay, js/case-study.js) ----
+  // HOME slides to the top right and becomes the round × button;
+  // the links pill slides onto it and shrinks away.
+  & &__home &__label--close {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    translate: -50% -50%;
+    opacity: 0;
+    scale: 0.5;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      background: currentColor;
+      translate: 0 -50%;
+      rotate: 45deg;
+    }
+
+    &::after {
+      rotate: -45deg;
+    }
+  }
+
+  &.is-case {
+    .nav__home {
+      left: 100%;
+      translate: -100% 0;
+      width: var(--close-w);
+    }
+
+    .nav__home .nav__label--full,
+    .nav__home .nav__label--compact {
+      opacity: 0;
+      scale: 0.5;
+    }
+
+    .nav__home .nav__label--close {
+      opacity: 1;
+      scale: 1;
+    }
+
+    .nav__links {
+      translate: var(--links-shift-close, 0) 0;
+      scale: 0.5;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__home,
+    &__links,
+    & &__home &__label {
+      transition: opacity 0.2s ease;
+    }
+  }
+}

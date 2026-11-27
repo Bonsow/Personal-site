@@ -1,0 +1,74 @@
+{
+  "projects": [
+    {
+      "id": "example-project",
+      "title": "Example Project",
+      "date": "2026-03",
+      "description": "A one or two sentence summary of the project, shown on the projects list.",
+      "cover": "media/projects/example-project/cover.jpg",
+      "sections": [
+        {
+          "header": "Overview",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "First paragraph of the section."
+            },
+            {
+              "type": "paragraph",
+              "text": "A second paragraph. Add as many paragraph blocks as you need."
+            },
+            {
+              "type": "image",
+              "src": "media/projects/example-project/overview.jpg",
+              "alt": "Describe what the image shows",
+              "caption": "Optional caption shown under the image"
+            }
+          ]
+        },
+        {
+          "header": "Research",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Lists can be bulleted or numbered."
+            },
+            {
+              "type": "bulletList",
+              "items": ["A bullet point", "Another bullet point", "A third bullet point"]
+            },
+            {
+              "type": "numberedList",
+              "items": ["First step", "Second step", "Third step"]
+            }
+          ]
+        },
+        {
+          "header": "Redesign",
+          "blocks": [
+            {
+              "type": "beforeAfter",
+              "before": {
+                "src": "media/projects/example-project/before.jpg",
+                "alt": "The screen before the redesign"
+              },
+              "after": {
+                "src": "media/projects/example-project/after.jpg",
+                "alt": "The screen after the redesign"
+              },
+              "caption": "Optional caption"
+            },
+            {
+              "type": "slideshow",
+              "images": [
+                { "src": "media/projects/example-project/slide-1.jpg", "alt": "Slide 1", "caption": "Optional caption" },
+                { "src": "media/projects/example-project/slide-2.jpg", "alt": "Slide 2" },
+                { "src": "media/projects/example-project/slide-3.jpg", "alt": "Slide 3" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

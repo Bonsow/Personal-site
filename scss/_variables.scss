@@ -1,0 +1,124 @@
+// Colors — change these to restyle the whole site
+$color-primary: #0077ff;    // the blue: accents, dates, footer, hero name
+$color-background: #000b18; // page background (near-black navy)
+$color-text: #ffffff;       // headings, nav, bullets
+$color-text-muted: #c9e2ff; // paragraphs, roles
+
+// Cards — "glass" style (see _card.scss)
+$card-fill-opacity: 0.05;   // fill = $color-primary at this opacity
+$card-outline: #ffffff;     // 1px outline, blended with overlay
+$card-outline-width: 1px;
+
+// Font
+$font: 'Outfit', system-ui, sans-serif;
+
+// Type scale — from the style guide (font: Outfit)
+$size-h1: 2rem;        // 32px
+$size-h2: 1.625rem;    // 26px
+$size-h3: 1.5rem;      // 24px
+$size-p: 1rem;         // 16px
+$size-label: 0.875rem; // 14px
+
+$weight-h1: 800;       // Extrabold
+$weight-h2: 600;       // Semi Bold
+$weight-h3: 500;       // Medium
+$weight-p: 400;        // Regular
+$weight-label: 350;    // between Light and Regular (Outfit is a variable font)
+
+// Breakpoints
+$bp-desktop: 1024px;
+$bp-mobile: 600px;
+
+// Name — js/main.js sets the exact size (50% / 90% of screen width).
+// These are only a rough starting size used before the JS runs.
+$name-ratio: 5.8;
+$size-name-mobile: calc(90vw / #{$name-ratio});   // ~90% wide on phones/tablets
+$size-name-desktop: calc(50vw / #{$name-ratio});  // 50% wide on desktop, no max (4K too)
+
+// Max width of the content column — nav, page content and footer all use it
+$content-width: 1440px;
+
+// Footer — matches the Figma frame
+$footer-width: $content-width; // interior frame
+$footer-stack-below: 800px;    // footer columns stack on screens narrower than this
+$footer-padding: 80px;       // top & bottom
+$size-footer-heading: 2rem;  // 32px
+$size-footer-text: 1rem;     // 16px
+$size-footer-icon: 1rem;     // 16px tall
+$footer-icon-gap: 10px;
+
+// Nav — matches the Figma "Header" frame
+$nav-width: $content-width;  // max width, centered
+$nav-padding-y: 20px;       // top & bottom
+$nav-pill-height: 56px;
+$nav-pill-padding-x: 40px;
+$nav-link-gap: 40px;
+$size-nav: 1.5rem;          // 24px
+
+// Compact nav (shown after scrolling down)
+$nav-compact-size: 0.75rem;     // 12px
+$nav-compact-padding-y: 10px;
+$nav-compact-padding-x: 20px;
+$nav-morph-duration: 0.6s;      // shrink / expand time
+
+// Subtle elastic-out easing (~7% overshoot). Generated curve; to make it
+// bouncier or calmer, ask for a new one or swap in a normal ease.
+$ease-elastic: linear(0, 0.325, 0.601, 0.808, 0.945, 1.025, 1.061, 1.07, 1.063, 1.05, 1.034,
+  1.021, 1.011, 1.004, 1, 0.997, 0.997, 0.997, 0.998, 0.998, 0.999, 0.999, 1, 1, 1);
+
+// Spacing rule (see the style guide): connected items (a title and its
+// paragraph, media and its caption, the lines of one item) are $gap-tight
+// apart; everything else (sections, cards, separate items) is $gap.
+// Component internals (buttons in cards, nav, footer) keep their own values.
+$gap-tight: 10px;
+$gap: 20px;
+
+// Inner pages (about, etc.)
+$page-width: $content-width; // content column, matches the nav
+$section-gap: $gap;          // space between sections
+$radius: 16px;               // cards
+$radius-sm: 10px;            // logos, previews, media
+$fun-icon-size: 86px;        // card icon when closed
+$fun-icon-size-open: 30px;   // card icon when open
+$level-preview-max: 300px;   // GD preview videos never get wider than this
+$level-columns: 3;           // GD levels per row (above mobile)
+
+// Projects pages (projects.html, project.html)
+$reading-width: 750px;          // column for the project list and case studies (matches Figma)
+$project-card-gap: $gap;        // space between project cards
+$project-list-top: 80px;        // extra space between the nav and the first card
+$project-thumb-size: 150px;     // square thumbnail
+$project-thumb-radius: 18px;
+$project-thumb-overhang: 24px;  // how far the thumbnail sticks out past the card's left edge
+$project-thumb-overhang-mobile: 10px; // phones: how far the image sticks out past the card's top edge
+$project-section-gap: $gap;     // space between case study sections
+$project-close-width: 72px;     // round × button on a case study
+$mobile-gutter: 20px;           // side spacing on phones (projects pages)
+$project-card-gap-mobile: $gap; // space between project cards on phones
+
+// Slideshow arrow buttons
+$slideshow-btn-size: 40px;
+$slideshow-btn-inset: 10px;     // distance from the image's bottom corners
+
+// Before / after slider
+$before-after-grip-size: 40px;
+$before-after-line-width: 2px;  // divider line thickness (card outlines are 1px)
+$before-after-tag-inset: 10px;  // Before/After buttons' distance from the bottom corners
+
+// Motion
+$duration: 0.45s;
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+// Parallax — extra particle canvas above the name so it can move at a different speed
+$parallax-room: 60vh;
+
+// Fluid sizes — clamp(min, preferred, max) scales with the screen width
+$size-lg: clamp(1.75rem, 3vw, 2.5rem);
+$size-md: clamp(1.1rem, 2vw, 1.75rem);       // tagline
+$size-sm: clamp(0.9rem, 1vw, 1rem);
+
+// Spacing
+$space-sm: clamp(0.5rem, 1vw, 0.75rem);
+$space-md: clamp(1rem, 2vw, 1.5rem);
+$space-lg: clamp(2rem, 5vw, 4rem);
+

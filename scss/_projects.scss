@@ -1,0 +1,507 @@
+@use 'variables' as *;
+@use 'card';
+
+// ===============================================================
+// Projects list (projects.html) and case study (project.html)
+// ===============================================================
+
+// Narrower reading column for these pages.
+// At least a full screen tall, so the footer starts below the fold and
+// doesn't jump down when the project cards load in.
+.page--reading {
+  width: min(#{$reading-width}, calc(100% - #{$space-md} * 2));
+  min-height: 100vh;  // fallback for older browsers
+  min-height: 100svh;
+
+  @media (max-width: $bp-mobile) {
+    width: calc(100% - #{$mobile-gutter} * 2);
+  }
+}
+
+// Numbered lists (bullets live in _about.scss)
+.numbers {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+
+// ---------------------------------------------------------------
+// Projects list
+// ---------------------------------------------------------------
+.project-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $project-card-gap;
+  padding-top: $project-list-top;
+
+  @media (max-width: $bp-mobile) {
+    gap: $project-card-gap-mobile;
+    padding-top: 0; // the nav is shorter on phones, so start right under it
+  }
+}
+
+.project-list__error {
+  color: $color-text-muted;
+}
+
+// Card: thumbnail overhangs the left edge, text on the right
+.project-card {
+  display: flex;
+  align-items: center;
+  gap: $gap-tight; // thumbnail + its text
+  // Shift the card right so the overhanging thumbnail lines up with the column edge
+  margin-left: $project-thumb-overhang;
+  padding: 10px 20px 10px 0;
+  color: inherit;
+  text-decoration: none;
+
+  &__thumb {
+    z-index: 1; // sit above the card's outline, which would otherwise cross it
+    flex-shrink: 0;
+    width: $project-thumb-size;
+    height: $project-thumb-size;
+    margin-left: -$project-thumb-overhang;
+    border-radius: $project-thumb-radius;
+    object-fit: cover;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $gap-tight; // title, date, description and link
+    min-width: 0;
+  }
+
+  &__title {
+    line-height: 1.15;
+  }
+
+  &__desc {
+    font-size: $size-label;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  &:hover &__more,
+  &:focus-visible &__more {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  // ---- Phones: square image on top, then title/date | description, then link ----
+  @media (max-width: $bp-mobile) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $gap-tight;
+    margin-left: 0;
+    margin-top: $project-thumb-overhang-mobile; // room for the image sticking out the top
+    padding: 10px;
+
+    // Square image that fills the card's width and overhangs its top edge
+    &__thumb {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+      margin-left: 0;
+      margin-top: calc(-10px - #{$project-thumb-overhang-mobile}); // card padding + overhang
+    }
+
+    &__body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); // title/date 1/3, description 2/3
+      grid-template-areas:
+        'title desc'
+        'date  desc'
+        'more  more';
+      gap: $gap-tight;
+      align-items: start;
+    }
+
+    &__title {
+      grid-area: title;
+    }
+
+    &__date {
+      grid-area: date;
+    }
+
+    &__desc {
+      grid-area: desc;
+      font-size: $size-p;
+    }
+
+    &__more {
+      grid-area: more;
+    }
+  }
+}
+
+// ---------------------------------------------------------------
+// Case study
+// ---------------------------------------------------------------
+
+// Round × button, floating top-right over the reading column
+.project-close-bar {
+  position: fixed;
+  top: $nav-padding-y;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 10;
+  width: min(#{$reading-width}, calc(100% - #{$space-md} * 2));
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+
+  @media (max-width: $bp-mobile) {
+    width: calc(100% - #{$mobile-gutter} * 2);
+  }
+}
+
+.project-close {
+  @include card.card-surface($live-blend: false); // fixed, so pre-calculated outline
+  display: block;
+  width: $project-close-width;
+  height: $nav-pill-height;
+  border-radius: 999px;
+  color: $color-text;
+  pointer-events: auto;
+
+  // (written as ".project-close .project-close__icon" so it beats the card rule
+  // that makes every child position: relative)
+  & &__icon {
+    position: absolute;
+    inset: 0;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 3px;
+      border-radius: 2px;
+      background: currentColor;
+      translate: -50% -50%;
+      rotate: 45deg;
+    }
+
+    &::after {
+      rotate: -45deg;
+    }
+  }
+}
+
+.project {
+  gap: $project-section-gap;
+  padding-top: $nav-padding-y * 2 + $nav-pill-height + 20px;
+  padding-bottom: $footer-padding;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $gap-tight; // title + date
+  }
+
+  &__date {
+    color: $color-primary;
+  }
+
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: $project-section-gap;
+  }
+}
+
+.project-section {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-tight; // header + its blocks
+
+  &__header {
+    line-height: 1.2;
+  }
+}
+
+// Images, before/after and slideshows
+.project-figure {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-tight; // media + its caption
+}
+
+.project-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: $radius-sm;
+  object-fit: cover;
+}
+
+// ---------------------------------------------------------------
+// Before / after (js/project-render.js drives it):
+//   --pos     divider position, 0–100%
+//   --grip-y  how far the grip sits above/below the middle (px)
+// ---------------------------------------------------------------
+@mixin glass-button {
+  border: 1px solid rgba($color-text, 0.25);
+  background: rgba($color-background, 0.45);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: $color-text;
+  cursor: pointer;
+}
+
+.before-after {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius-sm;
+  cursor: ew-resize;
+  touch-action: pan-y; // vertical swipes still scroll the page on phones
+  user-select: none;
+
+  &__layer .project-media {
+    border-radius: 0;
+    pointer-events: none;
+  }
+
+  // "After" sits on top and is clipped to the right of the divider
+  &__after {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 0 0 var(--pos));
+
+    // Placeholder only: a different shade so the two sides are distinguishable
+    .placeholder {
+      background: rgba($color-primary, 0.55);
+    }
+  }
+
+  // Divider line: same look as the card outline — white overlaid on a
+  // 25px blur of the photo behind it. Overlaying white = doubling the
+  // brightness, so it's done with backdrop-filter: blur + brightness(2).
+  // The element is wider than the line so the blur has photo to sample,
+  // then a mask keeps only the middle $before-after-line-width.
+  &__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: card.$card-outline-blur * 2;
+    translate: -50% 0;
+    pointer-events: none;
+    -webkit-backdrop-filter: blur(card.$card-outline-blur) brightness(2);
+    backdrop-filter: blur(card.$card-outline-blur) brightness(2);
+    $half: $before-after-line-width * 0.5;
+    $line: linear-gradient(to right, transparent calc(50% - #{$half}), #000 0, #000 calc(50% + #{$half}), transparent 0);
+    -webkit-mask-image: $line;
+    mask-image: $line;
+
+    // Fallback for browsers without backdrop-filter: plain overlay-blended line
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      width: $before-after-line-width;
+      background: $card-outline;
+      mix-blend-mode: overlay;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+
+  // Grip: positioned by --pos / --grip-y; JS squashes it with `scale`,
+  // and the inner face does the hover/press grow
+  &__grip {
+    position: absolute;
+    top: 50%;
+    left: var(--pos);
+    z-index: 1;
+    width: $before-after-grip-size;
+    height: $before-after-grip-size;
+    translate: -50% calc(-50% + var(--grip-y, 0px));
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &__grip-face {
+    @include glass-button;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+
+  // "<>" made from two copies of media/icons/menu_arrow.svg
+  &__chevron {
+    width: 6px;
+    height: 11px;
+    background-color: currentColor;
+    -webkit-mask: url('../media/icons/menu_arrow.svg') center / contain no-repeat;
+    mask: url('../media/icons/menu_arrow.svg') center / contain no-repeat;
+
+    &--left {
+      rotate: 180deg;
+    }
+  }
+
+  // "Before" / "After" pill buttons
+  &__tag {
+    @include glass-button;
+    position: absolute;
+    bottom: $before-after-tag-inset;
+    z-index: 1;
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: $size-p;
+    font-weight: $weight-p;
+    color: $color-text-muted;
+
+    &--before {
+      left: $before-after-tag-inset;
+    }
+
+    &--after {
+      right: $before-after-tag-inset;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Keyboard focus (hidden range input) shows on the grip
+.before-after:has(.before-after__range:focus-visible) .before-after__grip-face {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+}
+
+// ---------------------------------------------------------------
+// Slideshow: slides sit side by side and the track scrolls (expo-out),
+// with round glass arrow buttons in the bottom corners. Timing lives in
+// js/project-render.js.
+// ---------------------------------------------------------------
+.slideshow {
+  position: relative;
+
+  &__viewport {
+    overflow: hidden;
+    border-radius: $radius-sm;
+  }
+
+  &__track {
+    display: flex;
+    transition: transform var(--slide-duration, 900ms) var(--slide-ease, ease-out);
+    will-change: transform;
+
+    &.is-instant {
+      transition: none;
+    }
+  }
+
+  &__slide {
+    flex: 0 0 100%;
+    min-width: 0;
+
+    .project-media {
+      border-radius: 0;
+    }
+  }
+
+  // Round glass arrow buttons
+  &__btn {
+    position: absolute;
+    bottom: $slideshow-btn-inset;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: $slideshow-btn-size;
+    height: $slideshow-btn-size;
+    padding: 0;
+    border: 1px solid rgba($color-text, 0.25);
+    border-radius: 50%;
+    background: rgba($color-background, 0.45);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    color: $color-text;
+    cursor: pointer;
+
+    &--prev {
+      left: $slideshow-btn-inset;
+    }
+
+    &--next {
+      right: $slideshow-btn-inset;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
+  }
+
+  // Arrow from media/icons/menu_arrow.svg, used as a mask so it takes the
+  // text colour; flipped for the previous button
+  &__chevron {
+    width: 8px;
+    height: 14px;
+    background-color: currentColor;
+    -webkit-mask: url('../media/icons/menu_arrow.svg') center / contain no-repeat;
+    mask: url('../media/icons/menu_arrow.svg') center / contain no-repeat;
+  }
+
+  &__btn--next &__chevron {
+    translate: 1px 0; // optical centring: the point sits right of centre
+  }
+
+  &__btn--prev &__chevron {
+    rotate: 180deg;
+    translate: -1px 0;
+  }
+}
+
+// ---------------------------------------------------------------
+// Case study overlay on projects.html (js/case-study.js animates it)
+// Sits under the nav (z-index 10) so the nav can become the × button.
+// ---------------------------------------------------------------
+.case-study {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+
+  &[hidden] {
+    display: none;
+  }
+
+  // Covers the list; starts fully clipped away (hidden above the top edge)
+  &__bg {
+    position: absolute;
+    inset: 0;
+    background: $color-background;
+    clip-path: inset(0 0 100% 0);
+  }
+
+  // The overlay scrolls on its own (with its own Lenis)
+  &__scroll {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__content .project__title:focus {
+    outline: none;
+  }
+}

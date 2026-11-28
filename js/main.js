@@ -54,7 +54,7 @@ const PARALLAX_SPEED = 0.5;     // particles scroll at 50% of page speed
 const CAN_HOVER = window.matchMedia('(hover: hover)').matches;
 
 async function initNameParticles() {
-  if (!window.tsParticles) return;
+  if (!window.tsParticles || !document.getElementById('name-particles')) return; // home page only
 
   await loadSlim(tsParticles);
   await tsParticles.load({

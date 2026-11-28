@@ -28,6 +28,8 @@ const TP_CURSOR_FADE = 1.2;         // seconds to ease in/out of the lighter col
 // Scroll
 const TP_PARALLAX = 0.35;          // 0–1: how far the biggest particles move with the page
                                    // while scrolling (smaller ones move less = feel farther away)
+const TP_PARALLAX_SMOOTHING = 0.2; // 0–1: share of the remaining shift applied each frame.
+                                   // Lower = smoother but floatier, 1 = no smoothing (old behaviour)
 // -----------------------------------------------------------------
 
 (async () => {
@@ -116,19 +118,40 @@ const TP_PARALLAX = 0.35;          // 0–1: how far the biggest particles move 
   // by their size. Particles leaving the screen wrap to the other side.
   if (!container || typeof lenis === 'undefined' || typeof container.particles?.filter !== 'function') return;
 
+  // Phones send scroll updates late and in bursts, which made the particles
+  // hold still then hop. Instead of applying each scroll step at once, it's
+  // added to a "still to move" amount that's eased out over the next frames.
   const maxRadius = TP_SIZE_MAX / 2;
   let lastScroll = lenis.scroll;
+  let pending = 0;      // px of parallax shift not applied yet
+  let running = false;
+
+  const shiftParticles = (amount) => {
+    container.particles
+      .filter(() => true)
+      .forEach((particle) => {
+        const depth = particle.getRadius() / maxRadius; // 0.33 – 1
+        particle.position.y -= amount * depth;
+      });
+  };
+
+  const tick = () => {
+    const step = Math.abs(pending) < 0.05 ? pending : pending * TP_PARALLAX_SMOOTHING;
+    pending -= step;
+    shiftParticles(step);
+    if (pending !== 0) requestAnimationFrame(tick);
+    else running = false;
+  };
 
   lenis.on('scroll', ({ scroll }) => {
     const delta = scroll - lastScroll;
     lastScroll = scroll;
     if (!delta) return;
 
-    container.particles
-      .filter(() => true)
-      .forEach((particle) => {
-        const depth = particle.getRadius() / maxRadius; // 0.33 – 1
-        particle.position.y -= delta * TP_PARALLAX * depth;
-      });
+    pending += delta * TP_PARALLAX;
+    if (!running) {
+      running = true;
+      requestAnimationFrame(tick);
+    }
   });
 })();

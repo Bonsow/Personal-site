@@ -57,7 +57,12 @@ const TP_PARALLAX_SMOOTHING = 0.2; // 0–1: share of the remaining shift applie
   const container = await tsParticles.load({
     id: 'test-particles',
     options: {
-      fullScreen: { enable: true, zIndex: -1 }, // fixed behind all page content
+      // Not tsParticles' own full-screen mode: that canvas resizes whenever a
+      // phone's address bar slides in/out mid-scroll, and every resize rescales
+      // all particle positions (they jump) and adds/removes particles.
+      // The #test-particles box in about.html is fixed behind the page at
+      // 100lvh (the tallest the screen gets), so its size never changes.
+      fullScreen: { enable: false },
       background: { color: 'transparent' },
       fpsLimit: 60,
       detectRetina: true,

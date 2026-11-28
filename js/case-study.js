@@ -160,7 +160,12 @@ function closeCaseStudy({ fromHistory = false } = {}) {
     csPushedHistory = false;
     if (!fromHistory) history.replaceState(null, '', location.pathname);
 
-    csLenis?.stop();
+    // Freeze the overlay where it is. Don't stop its Lenis yet: a stopped
+    // Lenis gets "overflow: clip" from lenis.css, and that throws the overlay's
+    // scroll position back to the top (the bug where closing from halfway
+    // down jumped to the top first). Ignoring pointer input instead keeps
+    // wheel / touch from scrolling it while it animates away.
+    csRoot.style.pointerEvents = 'none';
 
     // 1: × morphs back into the nav
     setNavCase(false);
@@ -180,6 +185,8 @@ function closeCaseStudy({ fromHistory = false } = {}) {
     }).finished;
 
     csRoot.hidden = true;
+    csRoot.style.pointerEvents = '';
+    csLenis?.stop(); // safe now: it's hidden, and the next open scrolls to the top anyway
     csSections.replaceChildren(); // also stops slideshows
     document.title = 'Projects — Spencer Anderson';
     csBackground.forEach((el) => (el.inert = false));
